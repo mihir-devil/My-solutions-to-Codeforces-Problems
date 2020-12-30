@@ -42,33 +42,6 @@ const int mod = 1e9 + 7;
 const int pinf = ((int)2e18);
 const int ninf = ((int)-2e18);
 const int mod2=998244353;
-int countIncreasing(vector<int> arr, int n) 
-{ 
-    int cnt = 0;  // Initialize result 
-  
-    int len = 1; 
-  
-    for (int i=0; i < n-1; ++i) 
-    { 
-        // If arr[i+1] is greater than arr[i], 
-        // then increment length 
-        if (arr[i + 1] > arr[i]) 
-            len++; 
-              
-        // Else Update count and reset length 
-        else
-        { 
-            cnt += (((len - 1) * len) / 2); 
-            len = 1; 
-        } 
-    } 
-      
-    // If last length is more than 1 
-    if (len > 1) 
-        cnt += (((len - 1) * len) / 2); 
-  
-    return cnt; 
-}
 signed main()
 {
         ios_base::sync_with_stdio(false);
@@ -78,21 +51,28 @@ signed main()
         {
                 int q,n,x=0,k, y, i,l, j,sum=0,r,c;
                 cin>>n;
-                vct<int> a(n);
-                take(a);
-                int count=0;
-                if(n==1){
-                        cout<<0<<'\n';
-                        con;
-                }
-                int flag=1;
-                count=countIncreasing(a,n);
-                loop(i,1,n-1){
-                        if(a[i]<a[i+1]&&a[i]<a[i-1]){
-                                count++;
+                vct<int> a(n+1);
+                take1(a);
+                sort(all(a));
+                int dp[n+1][1002];
+                memset(dp,0,sizeof(dp));
+                loop(j,0,1000)
+                dp[0][j]=0,dp[1][j]=abs(j-a[1]);
+                dp[1][0]=0;
+                loop(i,2,n+1){
+                        int k=pinf;
+                        dp[i][0]=pinf;
+                        loop(j,1,500){
+                                loop(p,1,j){
+                                        k=min(dp[i-1][p]+abs(j-a[i]),k);
+                                }
+                                dp[i][j]=k;
+                        }
+                        loop(j,1,500){
+                                dp[i][0]=min(dp[i][0],dp[i][j]);
                         }
                 }
-                cout<<count<<'\n';
+                cout<<dp[n][0]<<'\n';
         }
         return 0;
 }
